@@ -12,6 +12,7 @@ export default function Header({ header, entries }: {header: HeaderProps, entrie
 
   const router = useRouter();
   const [getHeader, setHeader] = useState(header);
+  const [selectedLanguage, setSelectedLanguage] = useState(0);
 
   function buildNavigation(ent: Entry, hd: HeaderProps) {
     let newHeader={...hd};
@@ -46,13 +47,34 @@ export default function Header({ header, entries }: {header: HeaderProps, entrie
     }
   }
 
+  function handleLanguage (event: React.ChangeEvent<HTMLSelectElement>) {
+   
+    let url = event.target.value + '/' + window.location.pathname.substring(0, window.location.pathname.length)
+    if(window.location.pathname.indexOf('de') > 0 || window.location.pathname.indexOf('fr') > 0){
+      url = event.target.value + '/' + window.location.pathname.substring(4, window.location.pathname.length)
+    }
+    window.location.pathname = url
+  }
+
   useEffect(() => {
     if (header && entries) {
       onEntryChange(() => fetchData());
     }
   }, [header]);
-  const headerData = getHeader ? getHeader : undefined;
+
+  useEffect(() => {
+    let locale = window.location.pathname.substring(1,3)
+    if(window.location.pathname.indexOf('de') || window.location.pathname.indexOf('fr')){
+      let lang = 0
+      headerData?.language.map((data, index) => {
+        if(data.language_code == locale)
+        lang = index
+      })
+      setSelectedLanguage(lang)
+    }
+  }, []);
   
+  const headerData = getHeader ? getHeader : undefined;
   return (
     <header className='header'>
       <div className='note-div'>
@@ -111,7 +133,15 @@ export default function Header({ header, entries }: {header: HeaderProps, entrie
             )}
           </ul>
         </nav>
-
+        {headerData &&
+          <div className='language'>
+            <select className='language-select' onChange={handleLanguage} >
+              {headerData.language.map((langData, index) => (
+              <option value={langData.language_code} selected={index == selectedLanguage} >{langData.title}</option>
+              ))}
+            </select>
+          </div>
+        }
         <div className='json-preview'>
           <Tooltip content='JSON Preview' direction='top' dynamic={false} delay={200} status={0}>
             <span data-bs-toggle='modal' data-bs-target='#staticBackdrop'>

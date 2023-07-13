@@ -71,6 +71,7 @@ export type HeaderProps = {
   locale:string;
   logo: Image;
   navigation_menu:[List]
+  language:[LangData]
   notification_bar: Announcement;
   title: string;
   uid: string;
@@ -89,6 +90,12 @@ type List = {
   page_reference: [PageRef];
   $: {};
   href?: string;
+}
+
+type LangData = {
+  language_code: string;
+  title: string;
+  url: string;
 }
 
 export type NavLinks = {

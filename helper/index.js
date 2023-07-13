@@ -15,7 +15,6 @@ export const getHeaderRes = async () => {
     referenceFieldPath: ['navigation_menu.page_reference'],
     jsonRtePath: ['notification_bar.announcement_text'],
   });
-
   liveEdit && addEditableTags(response[0][0], 'header', true);
   return response[0][0];
 };
@@ -41,7 +40,7 @@ export const getAllEntries = async () => {
   return response[0];
 };
 
-export const getPageRes = async (entryUrl) => {
+export const getPageRes = async (entryUrl, locale) => {
   const response = await Stack.getEntryByUrl({
     contentTypeUid: 'page',
     entryUrl,
@@ -51,6 +50,7 @@ export const getPageRes = async (entryUrl) => {
       'page_components.section_with_buckets.buckets.description',
       'page_components.section_with_html_code.description',
     ],
+    locale
   });
   liveEdit && addEditableTags(response[0], 'page', true);
   return response[0];
@@ -67,12 +67,13 @@ export const getBlogListRes = async () => {
   return response[0];
 };
 
-export const getBlogPostRes = async (entryUrl) => {
+export const getBlogPostRes = async (entryUrl, locale) => {
   const response = await Stack.getEntryByUrl({
     contentTypeUid: 'blog_post',
     entryUrl,
     referenceFieldPath: ['author', 'related_post'],
     jsonRtePath: ['body', 'related_post.body'],
+    locale
   });
   liveEdit && addEditableTags(response[0], 'blog_post', true);
   return response[0];

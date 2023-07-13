@@ -3,7 +3,7 @@ import { onEntryChange } from '../contentstack-sdk';
 import RenderComponents from '../components/render-components';
 import { getPageRes } from '../helper';
 import Skeleton from 'react-loading-skeleton';
-import { Props } from "../typescript/pages";
+import { Context, Props } from "../typescript/pages";
 
 export default function Page(props: Props) {
   const { page, entryUrl } = props;
@@ -35,10 +35,21 @@ export default function Page(props: Props) {
   );
 }
 
-export async function getServerSideProps({params}: any) {
+export async function getServerSideProps(context: Context) {
+  let params: any = context.params
+  
+  interface language {
+    [key: string]: string;
+  }
+
+  const languageArray: language = {
+    de: 'de-de',
+    fr: 'fr-fr'
+  }
+  let localeCode = languageArray[context.locale] ? languageArray[context.locale] : 'en-us'
   try {
       const entryUrl = params.page.includes('/') ? params.page:`/${params.page}`
-      const entryRes = await getPageRes(entryUrl);
+      const entryRes = await getPageRes(entryUrl, localeCode);
       if (!entryRes) throw new Error('404');
       return {
         props: {

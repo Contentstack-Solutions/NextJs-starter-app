@@ -64,8 +64,18 @@ export default function Blog({ page, posts, archivePost, pageUrl }: {page: Page,
 }
 
 export async function getServerSideProps(context: Context) {
+  interface language {
+    [key: string]: string;
+  }
+
+  const languageArray: language = {
+    de: 'de-de',
+    fr: 'fr-fr'
+  }
+
+  let localeCode = languageArray[context.locale] ? languageArray[context.locale] : 'en-us'
   try {
-    const page = await getPageRes(context.resolvedUrl);
+    const page = await getPageRes(context.resolvedUrl, localeCode);
     const result: PostPage = await getBlogListRes();
 
     const archivePost = [] as any;

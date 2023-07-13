@@ -79,6 +79,8 @@ export type Context = {
   setHeader: Function;
   write: Function;
   end: Function;
+  params: object;
+  locale: string;
 }
 
 export type Pages = [

@@ -7,6 +7,7 @@ import Skeleton from 'react-loading-skeleton';
 import RenderComponents from '../../components/render-components';
 import ArchiveRelative from '../../components/archive-relative';
 import { Page, BlogPosts, PageUrl } from "../../typescript/pages";
+import { Context, Props } from "../../typescript/pages";
 
 
 export default function BlogPost({ blogPost, page, pageUrl }: {blogPost: BlogPosts, page: Page, pageUrl: PageUrl}) {
@@ -93,10 +94,20 @@ export default function BlogPost({ blogPost, page, pageUrl }: {blogPost: BlogPos
     </>
   );
 }
-export async function getServerSideProps({ params }: any) {
+export async function getServerSideProps(context: Context) {
+  let params: any = context.params
+  interface language {
+    [key: string]: string;
+  } 
+
+  const languageArray: language = {
+    de: 'de-de',
+    fr: 'fr-fr'
+  }
+  let locale = languageArray[context.locale] ? languageArray[context.locale] : 'en-us'
   try {
-    const page = await getPageRes('/blog');
-    const posts = await getBlogPostRes(`/blog/${params.post}`);
+    const page = await getPageRes('/blog', locale);
+    const posts = await getBlogPostRes(`/blog/${params.post}`, locale);
     if (!page || !posts) throw new Error('404');
 
     return {

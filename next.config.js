@@ -19,6 +19,11 @@ const config = {
     CONTENTSTACK_LIVE_EDIT_TAGS:
       process.env.CONTENTSTACK_LIVE_EDIT_TAGS || 'false',
   },
+  i18n: {
+    locales: ['en', 'fr', 'de' ],
+    defaultLocale: 'en',
+  },
+  
 };
 module.exports =
   process.env.NODE_ENV === 'development' ? config : withPWA(config);

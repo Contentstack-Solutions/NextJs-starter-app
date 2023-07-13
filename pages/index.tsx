@@ -6,6 +6,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Props, Context } from "../typescript/pages";
 
 export default function Home(props: Props) {
+  
 
   const { page, entryUrl } = props;
 
@@ -38,8 +39,18 @@ export default function Home(props: Props) {
 }
 
 export async function getServerSideProps(context: Context) {
+  interface language {
+    [key: string]: string;
+  }
+
+  const languageArray: language = {
+    de: 'de-de',
+    fr: 'fr-fr'
+  }
+
+  let localeCode = languageArray[context.locale] ? languageArray[context.locale] : 'en-us'
   try {
-    const entryRes = await getPageRes(context.resolvedUrl);
+    const entryRes = await getPageRes(context.resolvedUrl, localeCode);
     return {
       props: {
         entryUrl: context.resolvedUrl,
